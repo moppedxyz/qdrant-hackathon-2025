@@ -64,6 +64,24 @@ This approach involves directly manipulating the internal states (activations) o
  - Calculate the difference vector for each pair and average them to get the final steering vector.
  - During generation, add or subtract this vector from the model's activations to steer or suppress the attribute.
 
+## PCA / SVD Component Removal
+
+- Fit PCA on a set of embeddings.
+- Identify dominant components (e.g., domain-specific variance).
+- Subtract projections onto those components.
+- Example: Used in SIF embeddings to remove common directions.
+
+## Linear Discriminant Analysis (LDA) / Class Projections
+
+- If you have labeled classes (in-domain categories), compute directions that best separate them.
+- Project embeddings into class subspaces or compute residuals to get out-of-class parts.
+
+## Concept Activation Vectors (CAVs)
+
+- Train a linear classifier for a concept (e.g., "finance domain").
+- Use the weight vector as a direction in embedding space.
+- Project any embedding onto it to measure/remove that concept.
+
 ## Independent Component Analysis (ICA)
 
 While PCA finds orthogonal directions of maximum variance, ICA goes a step further by finding directions that are statistically independent. In text, these often correspond to more interpretable semantic features than the principal components from PCA. ICA assumes that the observed embeddings are linear mixtures of underlying, independent source signals (the "semantic components"). It aims to find the transformation matrix to un-mix these signals.
@@ -80,6 +98,60 @@ You can train a VAE to encode a sentence into a latent space that is explicitly 
 - Design a VAE architecture (encoder and decoder).
 - Train it on a large corpus of sentences. The training objective is a combination of reconstruction loss and a Kullback-Leibler (KL) divergence term that encourages the desired latent structure.
 - After training, the encoder will produce multiple sub-embeddings for a given sentence, each corresponding to a disentangled factor.
+
+## Class Centroid Residuals
+
+- Compute centroids for each class/domain.
+- Represent an embedding as (projection onto centroid space) + (residual).
+- Residual vector often captures OOD or “orthogonal” meaning.
+
+## Token based
+
+### Sub-embedding by Token Clusters
+
+- Instead of just the pooled embedding, cluster token embeddings within a sentence.
+- Aggregate (mean/max) each cluster → yields multiple “sub-embeddings.”
+
+### Attention-Guided Extraction
+
+- Use attention weights to select subsets of tokens (e.g., nouns vs verbs).
+- Pool embeddings over those subsets → gives multiple sub-embeddings aligned with syntactic/semantic roles.
+
+## Layer-wise Decomposition
+
+- Extract embeddings from different transformer layers.
+- Early layers ≈ syntactic, later layers ≈ semantic.
+
+Combine or analyze separately.
+  
+## Sparse Autoencoders for Feature Disentanglement
+
+This approach creates an overcomplete autoencoder, where the hidden layer is much larger than the input layer (n ggd). Sparsity is enforced not with a traditional penalty like L1 loss, but by directly keeping only the top-k strongest activations in the hidden layer. This forces the model to learn a dictionary of features where any given input can be represented by a small combination of them. [link](https://gemini.google.com/u/1/app/d8c4757fc7d4ddbd)
+
+## Supervised Dictionary Learning
+
+You can use Supervised Dictionary Learning to break down a word's vector into a sparse combination of interpretable building blocks, called "atoms." ⚛️ Think of it like a recipe: instead of one complex vector, a word is represented by a few core "ingredients" (the atoms) and their amounts. The "supervised" part ensures that these atoms learn to represent specific, meaningful concepts like grammar (e.g., "noun-ness" or "verb-ness") or sentiment. [link](https://gemini.google.com/u/1/app/f9a152fb20d10808)
+
+or 
+
+- Learn a dictionary of basis vectors (sklearn.decomposition.DictionaryLearning).
+- Each embedding is expressed as a sparse combination of basis vectors.
+- Active dimensions ≈ interpretable sub-embeddings
+
+## Partitioning into Semantic Sub-Embeddings (S³BERT)
+
+Decompose a dense sentence embedding into fixed sub-vectors, each representing a predefined semantic feature (e.g., negation, semantic roles), while a residual captures the rest. This allows selective removal by zeroing out sub-vectors. [link](https://gemini.google.com/u/1/app/d96589836ffa68d0)
+
+## Routing to Specialized Subspaces (MixSP)
+
+This method creates a model that learns to split a sentence's meaning into two distinct parts (e.g., a "high similarity" part and a "low similarity" part). It does this by using a small neural network to decide which part of the embedding vector corresponds to which meaning. [link](https://gemini.google.com/u/1/app/99d1357ccf593a96)
+
+- Train multiple linear projections, each tuned to a subset of data (e.g., in-domain vs OOD).
+- Route embeddings through different projectors depending on the sentence type.
+
+## Variational Dropout for Disentangled Transformations
+
+The core idea is to learn a rotation of your embedding space where specific dimensions (a "subspace") are strongly correlated with a specific semantic attribute (like a word's meaning). Variational dropout is the mechanism used to automatically discover which dimensions belong to which attribute by trying to "turn off" as many dimensions as possible for each attribute. The dimensions that resist being turned off are the ones that are important. [link](https://gemini.google.com/u/1/app/db8f1b0d9729f954)
 
 # Results
 
