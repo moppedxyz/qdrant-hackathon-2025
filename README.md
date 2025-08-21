@@ -3,30 +3,32 @@
 ## setup
 
 Clone the repository
+
 ```bash
 git clone git@github.com:moppedxyz/qdrant-hackathon-2025.git
 ```
 
 Create a virtual environment
+
 ```bash
 uv venv --python 3.12
 ```
 
 Install dependencies (via [uv](https://docs.astral.sh/uv/getting-started/installation/))
+
 ```bash
 uv sync --all-extras
 ```
 
 ### ensure you have access to all datasets
 
-```bash 
+```bash
 huggingface-cli login
 ```
 
 ```bash
 https://huggingface.co/datasets/DDSC/dkhate
 ```
-
 
 ### data preparation - embeddings
 
@@ -44,6 +46,7 @@ domain_test_data, ood_test_data = dataloader.load_test_data()
 ```
 
 ## read qdrant ID collection
+
 ```bash
 from vecguard import vectorstore
 client = vectorstore.get_qdrant_client()
@@ -57,12 +60,12 @@ Method for removing a specific concept from a set of embeddings. It finds the li
 
 ## Steering Vectors
 
-This approach involves directly manipulating the internal states (activations) of a model (encoder) during inference to influence its output. Adding a "steering vector" to the model's activations at specific layers to guide the output towards a desired attribute. To remove a component, you would subtract this vector. A steering vector is created by finding the average difference between embeddings of texts with and without a desired attribute. For example, steering_vector = avg_embedding("positive text") - avg_embedding("neutral text"). Very similar to semantic router. 
+This approach involves directly manipulating the internal states (activations) of a model (encoder) during inference to influence its output. Adding a "steering vector" to the model's activations at specific layers to guide the output towards a desired attribute. To remove a component, you would subtract this vector. A steering vector is created by finding the average difference between embeddings of texts with and without a desired attribute. For example, steering_vector = avg_embedding("positive text") - avg_embedding("neutral text"). Very similar to semantic router.
 
- - Create pairs of texts (e.g., one with a positive sentiment, one neutral).
- - Get the internal activations/embeddings from a specific layer of your model for each text.
- - Calculate the difference vector for each pair and average them to get the final steering vector.
- - During generation, add or subtract this vector from the model's activations to steer or suppress the attribute.
+- Create pairs of texts (e.g., one with a positive sentiment, one neutral).
+- Get the internal activations/embeddings from a specific layer of your model for each text.
+- Calculate the difference vector for each pair and average them to get the final steering vector.
+- During generation, add or subtract this vector from the model's activations to steer or suppress the attribute.
 
 ## PCA / SVD Component Removal
 
@@ -123,7 +126,7 @@ You can train a VAE to encode a sentence into a latent space that is explicitly 
 - Early layers ≈ syntactic, later layers ≈ semantic.
 
 Combine or analyze separately.
-  
+
 ## Sparse Autoencoders for Feature Disentanglement
 
 This approach creates an overcomplete autoencoder, where the hidden layer is much larger than the input layer (n ggd). Sparsity is enforced not with a traditional penalty like L1 loss, but by directly keeping only the top-k strongest activations in the hidden layer. This forces the model to learn a dictionary of features where any given input can be represented by a small combination of them. [link](https://gemini.google.com/u/1/app/d8c4757fc7d4ddbd)
@@ -132,7 +135,7 @@ This approach creates an overcomplete autoencoder, where the hidden layer is muc
 
 You can use Supervised Dictionary Learning to break down a word's vector into a sparse combination of interpretable building blocks, called "atoms." ⚛️ Think of it like a recipe: instead of one complex vector, a word is represented by a few core "ingredients" (the atoms) and their amounts. The "supervised" part ensures that these atoms learn to represent specific, meaningful concepts like grammar (e.g., "noun-ness" or "verb-ness") or sentiment. [link](https://gemini.google.com/u/1/app/f9a152fb20d10808)
 
-or 
+or
 
 - Learn a dictionary of basis vectors (sklearn.decomposition.DictionaryLearning).
 - Each embedding is expressed as a sparse combination of basis vectors.
@@ -155,6 +158,7 @@ The core idea is to learn a rotation of your embedding space where specific dime
 
 # Results
 
-| Approach | ID Score | OOD Score | GQR Score | Resources |  Test by |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| [semantic-router (threshold=0.2)](https://github.com/aurelio-labs/semantic-router) | 0.61 | 0.94 |  0.74 |[Link](https://github.com/aurelio-labs/semantic-router) | William |
+| Approach                                                                           | ID Score | OOD Score | GQR Score | Resources                                                                                       | Test by |
+| :--------------------------------------------------------------------------------- | :------- | :-------- | :-------- | :---------------------------------------------------------------------------------------------- | :------ |
+| [semantic-router (threshold=0.2)](https://github.com/aurelio-labs/semantic-router) | 0.61     | 0.94      | 0.74      | [Link](https://github.com/aurelio-labs/semantic-router)                                         | William |
+| PCA based router (threshold=0.15, unoptimized)                                     | 0.69     | 0.95      | 0.80      | [Sci-kit PCA](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html) | Sebo    |

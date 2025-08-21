@@ -44,4 +44,4 @@ def scoring_function(text : str) -> int:
     similarity_score =  prediction.similarity_score if prediction.similarity_score else 0
     if similarity_score <= THRESHOLD:
         return 3
-    return response_dict.get(prediction.name, 3)
+    return response_dict.get(prediction.name, 3)  # type: ignore
