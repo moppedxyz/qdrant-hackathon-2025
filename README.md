@@ -165,7 +165,7 @@ The core idea is to learn a rotation of your embedding space where specific dime
 
 # GQR-Bench results
 
-🚀[github - qgr](https://github.com/williambrach/gqr), 📈[paper link](https://arxiv.org/pdf/2505.14524)
+🚀[github - gqr](https://github.com/williambrach/gqr), 📈[paper link](https://arxiv.org/pdf/2505.14524)
 
 
 | Model | Jigsaw | OLID | HateXplain | dkhate | TUKE SK | Web Q | ML Q | Unsafe Avg. | ID Acc. | OOD Acc. | GQR score |
