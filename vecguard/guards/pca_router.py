@@ -1,11 +1,27 @@
-from sentence_transformers import SentenceTransformer
-from tqdm import tqdm
-from vecguard.pca_router.models import Route, RouterPrediction
-from typing import List, Dict
 import numpy as np
 import pandas as pd
+from sentence_transformers import SentenceTransformer
 from sklearn.decomposition import PCA
 from sklearn.metrics.pairwise import cosine_similarity
+from typing import NamedTuple, List, Dict
+
+from vecguard import dataloader
+
+SEED = 42
+THRESHOLD = 0.15
+
+train_data, train_eval_data = dataloader.load_train_data()
+test_domain_data, test_ood_data = dataloader.load_test_data()
+
+
+class Route(NamedTuple):
+    name: str
+    utterances: List[str]
+
+
+class RouterPrediction(NamedTuple):
+    route: str
+    similarity_score: float
 
 
 class PCARouter:
@@ -114,3 +130,19 @@ class PCARouter:
             print(
                 f"PCA fitted with {n_components} components, explained variance ratio: {self.pca.explained_variance_ratio_[:5]}"
             )
+
+
+rl = PCARouter(data=train_data)
+
+
+def scoring_function(text: str) -> int:
+    response_dict = {"finance": 1, "healthcare": 2, "law": 0, "ood": 3}
+    prediction = rl(text)
+    if not isinstance(prediction, RouterPrediction):
+        return 3
+    if prediction is None:
+        return 3
+    similarity_score = prediction.similarity_score if prediction.similarity_score else 0
+    if similarity_score <= THRESHOLD:
+        return 3
+    return response_dict.get(prediction.route, 3)
