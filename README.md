@@ -162,6 +162,7 @@ The core idea is to learn a rotation of your embedding space where specific dime
 | :--------------------------------------------------------------------------------- | :------- | :-------- | :-------- | :---------------------------------------------------------------------------------------------- | :------ |
 | [semantic-router (threshold=0.2)](https://github.com/aurelio-labs/semantic-router) | 0.61     | 0.94      | 0.74      | [Link](https://github.com/aurelio-labs/semantic-router)                                         | William |
 | PCA based router (threshold=0.15, unoptimized)                                     | 0.69     | 0.95      | 0.80      | [Sci-kit PCA](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html) | Sebo    |
+| CAV based router (threshold=0.15)                                                  | 0.90     | 0.85      | 0.87      | [Arxiv](https://arxiv.org/html/2404.03713v1)                                                    | Riso    |
 
 # GQR-Bench results
 
