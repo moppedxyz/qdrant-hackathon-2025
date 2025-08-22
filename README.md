@@ -156,6 +156,12 @@ This method creates a model that learns to split a sentence's meaning into two d
 
 The core idea is to learn a rotation of your embedding space where specific dimensions (a "subspace") are strongly correlated with a specific semantic attribute (like a word's meaning). Variational dropout is the mechanism used to automatically discover which dimensions belong to which attribute by trying to "turn off" as many dimensions as possible for each attribute. The dimensions that resist being turned off are the ones that are important. [link](https://gemini.google.com/u/1/app/db8f1b0d9729f954)
 
+## representation-engineering
+
+https://github.com/andyzoujm/representation-engineering?tab=readme-ov-file
+
+https://arxiv.org/abs/2310.01405
+
 # Results
 
 | Approach                                                                           | ID Score | OOD Score | GQR Score | Resources                                                                                       | Test by |
