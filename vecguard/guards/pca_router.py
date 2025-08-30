@@ -1,9 +1,10 @@
+from typing import NamedTuple
+
 import numpy as np
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 from sklearn.decomposition import PCA
 from sklearn.metrics.pairwise import cosine_similarity
-from typing import NamedTuple, List, Dict
 
 from vecguard import dataloader
 
@@ -16,7 +17,7 @@ test_domain_data, test_ood_data = dataloader.load_test_data()
 
 class Route(NamedTuple):
     name: str
-    utterances: List[str]
+    utterances: list[str]
 
 
 class RouterPrediction(NamedTuple):
@@ -26,15 +27,15 @@ class RouterPrediction(NamedTuple):
 
 class PCARouter:
     def __init__(
-        self, routes: List[Route] | None = None, data: pd.DataFrame | None = None
-    ):
+        self, routes: list[Route] | None = None, data: pd.DataFrame | None = None
+    ) -> None:
         if routes is None and data is None:
             raise ValueError("Either 'routes' or 'data' must be provided.")
         self.routes = routes
         self.data = data
-        self.route_embeddings: Dict[str, np.ndarray] = {}
+        self.route_embeddings: dict[str, np.ndarray] = {}
         self.pca = None
-        self.transformed_embeddings: Dict[str, np.ndarray] = {}
+        self.transformed_embeddings: dict[str, np.ndarray] = {}
         self.encoder = SentenceTransformer(
             "all-MiniLM-L6-v2"
         )  # Initialize encoder for text input
@@ -73,7 +74,7 @@ class PCARouter:
             route=best_route or "ood", similarity_score=float(best_similarity)
         )
 
-    def init_router(self):
+    def init_router(self) -> None:
         """Initialize the router by computing embeddings for all route utterances or using dataframe vectors"""
 
         if self.data is not None:

@@ -156,12 +156,6 @@ This method creates a model that learns to split a sentence's meaning into two d
 
 The core idea is to learn a rotation of your embedding space where specific dimensions (a "subspace") are strongly correlated with a specific semantic attribute (like a word's meaning). Variational dropout is the mechanism used to automatically discover which dimensions belong to which attribute by trying to "turn off" as many dimensions as possible for each attribute. The dimensions that resist being turned off are the ones that are important. [link](https://gemini.google.com/u/1/app/db8f1b0d9729f954)
 
-## representation-engineering
-
-https://github.com/andyzoujm/representation-engineering?tab=readme-ov-file
-
-https://arxiv.org/abs/2310.01405
-
 # Results
 
 | Approach                                                                           | ID Score | OOD Score | GQR Score | Resources                                                                                       | Test by |
@@ -169,6 +163,11 @@ https://arxiv.org/abs/2310.01405
 | [semantic-router (threshold=0.2)](https://github.com/aurelio-labs/semantic-router) | 0.61     | 0.94      | 0.74      | [Link](https://github.com/aurelio-labs/semantic-router)                                         | William |
 | PCA based router (threshold=0.15, unoptimized)                                     | 0.69     | 0.95      | 0.80      | [Sci-kit PCA](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html) | Sebo    |
 | CAV based router (threshold=0.15)                                                  | 0.90     | 0.85      | 0.87      | [Arxiv](https://arxiv.org/html/2404.03713v1)                                                    | Riso    |
+| LDA based router (threshold=0.15)                                                  | 0.99     | 0      | 0      |                                                     | William    |
+| Lease based router (threshold=0.15)                                                  | 0.95     | 0.85      | 0.90     |                                                     | William    |
+| Lease based router (threshold=0.20)                                                  | 0.92     | 0.93      | 0.92     |                                                     | William    |
+| Lease based router (threshold=0.25)                                                  | 0.85     | 0.97      | 0.91     |                                                     | William    |
+
 
 # GQR-Bench results
 
