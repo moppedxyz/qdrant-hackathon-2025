@@ -158,6 +158,8 @@ The core idea is to learn a rotation of your embedding space where specific dime
 
 # Results
 
+ {'id_accuracy': 0.9062222222222223, 'ood_accuracy': np.float64(0.8520260201317366), 'gqr_score': np.float64(0.8782888499535314)}
+
 | Approach                                                                           | ID Score | OOD Score | GQR Score | Resources                                                                                       | Test by |
 | :--------------------------------------------------------------------------------- | :------- | :-------- | :-------- | :---------------------------------------------------------------------------------------------- | :------ |
 | [semantic-router (threshold=0.2)](https://github.com/aurelio-labs/semantic-router) | 0.61     | 0.94      | 0.74      | [Link](https://github.com/aurelio-labs/semantic-router)                                         | William |
@@ -167,6 +169,7 @@ The core idea is to learn a rotation of your embedding space where specific dime
 | Lease based router (threshold=0.15)                                                  | 0.95     | 0.85      | 0.90     |                                                     | William    |
 | Lease based router (threshold=0.20)                                                  | 0.92     | 0.93      | 0.92     |                                                     | William    |
 | Lease based router (threshold=0.25)                                                  | 0.85     | 0.97      | 0.91     |                                                     | William    |
+| Steering vector based router (threshold=0.15)                                                  | 0.91     | 0.85      | 0.88     |                                                     | William    |
 
 
 # GQR-Bench results
